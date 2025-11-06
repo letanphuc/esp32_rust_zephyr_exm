@@ -18,10 +18,7 @@ use zephyr::{
     kconfig::CONFIG_BOARD, kobj_define, raw::k_cycle_get_64,
 };
 
-const THREAD_STACK_SIZE: usize = 2048;
-
 static EXECUTOR_MAIN: StaticCell<Executor> = StaticCell::new();
-
 
 use zephyr::time::{sleep, Duration};
 use zephyr::raw::ZR_GPIO_OUTPUT_ACTIVE;
@@ -53,22 +50,19 @@ async fn main(_spawner: Spawner) {
     warn!("Inside of blinky");
 
     let mut led0 = zephyr::devicetree::aliases::led0::get_instance().unwrap();
-    let mut gpio_token = unsafe { zephyr::device::gpio::GpioToken::get_instance().unwrap() };
 
     if !led0.is_ready() {
         warn!("LED is not ready");
         loop {}
     }
 
-    unsafe {
-        led0.configure(&mut gpio_token, ZR_GPIO_OUTPUT_ACTIVE);
-    }
+    led0.configure(ZR_GPIO_OUTPUT_ACTIVE);
+    
 
     loop {
-        unsafe {
-            log::info!("Toggling LED");
-            led0.toggle_pin(&mut gpio_token);
-        }
+        log::info!("Toggling LED");
+        led0.toggle_pin();
+        
         sleep_ms(100).await;
     }
 }
