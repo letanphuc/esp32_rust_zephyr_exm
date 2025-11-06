@@ -13,16 +13,13 @@ use zephyr::embassy::Executor;
 
 use embassy_executor::Spawner;
 use static_cell::StaticCell;
-use zephyr::raw;
-use zephyr::{
-    kconfig::CONFIG_BOARD, kobj_define, raw::k_cycle_get_64,
-};
+use zephyr::kconfig::CONFIG_BOARD;
 
 static EXECUTOR_MAIN: StaticCell<Executor> = StaticCell::new();
 
-use zephyr::time::{sleep, Duration};
-use zephyr::raw::ZR_GPIO_OUTPUT_ACTIVE;
 use log::warn;
+use zephyr::raw::ZR_GPIO_OUTPUT_ACTIVE;
+use zephyr::time::{sleep, Duration};
 
 #[no_mangle]
 extern "C" fn rust_main() {
@@ -30,10 +27,7 @@ extern "C" fn rust_main() {
         zephyr::set_logger().unwrap();
     }
 
-    log::info!(
-        "Starting Embassy executor on {}",
-        CONFIG_BOARD
-    );
+    log::info!("Starting Embassy executor on {}", CONFIG_BOARD);
 
     let executor = EXECUTOR_MAIN.init(Executor::new());
     executor.run(|spawner| {
@@ -57,12 +51,11 @@ async fn main(_spawner: Spawner) {
     }
 
     led0.configure(ZR_GPIO_OUTPUT_ACTIVE);
-    
 
     loop {
         log::info!("Toggling LED");
         led0.toggle_pin();
-        
+
         sleep_ms(100).await;
     }
 }
