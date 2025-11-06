@@ -1,0 +1,18 @@
+manifest:
+  remotes:
+    - name: zephyrproject-rtos
+      url-base: https://github.com/zephyrproject-rtos
+
+  projects:
+    - name: zephyr
+      remote: zephyrproject-rtos
+      revision: main
+      import:
+        name-allowlist:
+          - hal_espressif
+    - name: zephyr-lang-rust
+      revision: dd73abc242e995784da62352fe8c70d9a6c7ac2e
+      path: modules/lang/rust
+      remote: zephyrproject-rtos
+  self:
+    path: app
