@@ -10,6 +10,7 @@ manifest:
       import:
         name-allowlist:
           - hal_espressif
+          - mbedtls
     - name: zephyr-lang-rust
       revision: main
       path: modules/lang/rust
